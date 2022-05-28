@@ -5,13 +5,13 @@ using static HelpDeskBroadcaster.BroadcasterBot;
 
 namespace HelpDeskBroadcaster
 {
-   public class OrganizationWithUsers : INotifyPropertyChanged
+    public class OrganizationWithUsers : INotifyPropertyChanged
     {
-        public string m_organizationID { get; set; }
-        public string m_organizationName { get; set; }
+        public string OrganizatioId { get; set; }
+        public string OrganizationName { get; set; }
 
-        public List<string> _viberUsersToken { get; set; } = new List<string>();
-        public List<string> _telegramUsersToken { get; set; } = new List<string>();
+        public List<string> ViberUsersToken { get; set; } = new List<string>();
+        public List<string> TelegramUsersToken { get; set; } = new List<string>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         private bool m_bIsChecked;
@@ -46,13 +46,13 @@ namespace HelpDeskBroadcaster
                 if (!item.Checked)
                     continue;
 
-                var source = ((eFlag & eMessengerIDFromFields.e_ID_Telegram) == eMessengerIDFromFields.e_ID_Telegram) ? item._telegramUsersToken :
-                             ((eFlag & eMessengerIDFromFields.e_ID_Viber) == eMessengerIDFromFields.e_ID_Viber) ? item._viberUsersToken : null;
+                var source = ((eFlag & eMessengerIDFromFields.e_ID_Telegram) == eMessengerIDFromFields.e_ID_Telegram) ? item.TelegramUsersToken :
+                             ((eFlag & eMessengerIDFromFields.e_ID_Viber) == eMessengerIDFromFields.e_ID_Viber) ? item.ViberUsersToken : null;
 
                 if (source == null)
                     continue;
 
-                foreach (var token in source)
+                foreach (string token in source)
                 {
                     if (ret.Find(x => x == token) == null)
                         ret.Add(token);

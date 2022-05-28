@@ -9,7 +9,7 @@ using Viber.Bot;
 
 namespace HelpDeskBroadcaster
 {
-   public class BroadcasterBot : INotifyPropertyChanged
+    public class BroadcasterBot : INotifyPropertyChanged
     {
         public enum eMessengerIDFromFields
         {
@@ -47,8 +47,6 @@ namespace HelpDeskBroadcaster
                 }
             }
         }
-
-        public string LogString;
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName = null)
@@ -70,42 +68,29 @@ namespace HelpDeskBroadcaster
             var viberTokens = organizations.GetUniqueTokens(eMessengerIDFromFields.e_ID_Viber);
             var telegramTokens = organizations.GetUniqueTokens(eMessengerIDFromFields.e_ID_Telegram);
 
-            LogString = "";
             CountMessages = 0;
             if ((eFlags & eMessengerIDFromFields.e_ID_Telegram) == eMessengerIDFromFields.e_ID_Telegram)
                 CountMessages += telegramTokens.Count;
 
             if ((eFlags & eMessengerIDFromFields.e_ID_Viber) == eMessengerIDFromFields.e_ID_Viber)
-                CountMessages += viberTokens.Count / 50 + 1;
-
+                CountMessages += viberTokens.Count;
 
             if ((eFlags & eMessengerIDFromFields.e_ID_Telegram) == eMessengerIDFromFields.e_ID_Telegram)
             {
-                int messageCount = 0;
-                var sleepTimeout = int.Parse(ConfigurationManager.AppSettings["TelegramBotTimeoutMilliseconds"]);
                 foreach (var userID in telegramTokens)
                 {
                     try
                     {
                         await m_telegramBot.SendTextMessageAsync(userID, text);
-                        Thread.Sleep(sleepTimeout);
+                        Thread.Sleep(200);
                         ++Progress;
-                        ++messageCount;
                     }
-                    catch (Exception ex)
-                    {
-                        ++Progress;
-                        LogString += DateTime.Now.ToLongTimeString() + "\tПОМИЛКА: Telegram (" + userID.ToString() + ") - " + ex.Message + "\n";
-                        continue;
-                    }
+                    catch (Telegram.Bot.Exceptions.ApiRequestException ex) { continue; }
                 }
-                if (messageCount > 0)
-                    LogString += DateTime.Now.ToLongTimeString() + "\tTelegram: Успішно відправлено повідомлення " + messageCount.ToString() + " користувачам\n";
             }
 
             if ((eFlags & eMessengerIDFromFields.e_ID_Viber) == eMessengerIDFromFields.e_ID_Viber)
             {
-                int messageCount = 0;
                 while (viberTokens.Count > 0)
                 {
                     var count = viberTokens.Count < 50 ? viberTokens.Count : 50; // viber broadcastMessage can send 50 messages at time!
@@ -114,23 +99,10 @@ namespace HelpDeskBroadcaster
                     {
                         await m_viberBot.SendBroadcastMessageAsync(br);
                         Progress += br.BroadcastList.Count;
-                        messageCount += br.BroadcastList.Count;
                     }
-                    catch (Exception ex)
-                    {
-                        Progress += br.BroadcastList.Count;
-                        string tokens = "";
-                        foreach (var token in viberTokens.GetRange(0, count))
-                        {
-                            tokens += token + ", ";
-                        }
-                        tokens.Remove(tokens.Length - 3);
-                        LogString += DateTime.Now.ToLongTimeString() + "\tПОМИЛКА: Viber(" + tokens + ") - " + ex.Message + "\n";
-                    }
+                    catch (Viber.Bot.ViberRequestApiException ex) { }
                     finally { viberTokens.RemoveRange(0, count); }
                 }
-                if (messageCount > 0)
-                    LogString += DateTime.Now.ToLongTimeString() + "\tViber: Успішно відправлено повідомлення " + messageCount.ToString() + " користувачам\n";
             }
         }
     }

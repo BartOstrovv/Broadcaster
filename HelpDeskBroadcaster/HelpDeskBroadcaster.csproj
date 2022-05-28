@@ -4,11 +4,9 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="icon.ico" />
     <None Remove="key.png" />
     <None Remove="key2.png" />
     <None Remove="man-key.png" />
@@ -24,9 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="icon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="key.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

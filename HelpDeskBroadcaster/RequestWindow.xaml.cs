@@ -6,11 +6,9 @@ namespace HelpDeskBroadcaster
 {
     public partial class RequestWindow : Window
     {
-        public RequestWindow(Tuple<string,string> key)
+        public RequestWindow()
         {
             InitializeComponent();
-            keyTxt.Text = key.Item1;
-            requestTxt.Text = key.Item2;
         }
 
         public Tuple<string, string> GetValues() => new Tuple<string, string>(keyTxt.Text, requestTxt.Text);

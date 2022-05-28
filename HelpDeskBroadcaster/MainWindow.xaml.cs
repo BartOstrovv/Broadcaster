@@ -8,7 +8,7 @@ namespace HelpDeskBroadcaster
 {
     public partial class MainWindow : Window
     {
-        private readonly string REGISTRY_BRANCH = @"SOFTWARE\Spherical\HelpDeskBroadcaster";
+        private readonly string REGISTRY_BRANCH = @"SOFTWARE\HelpDeskBroadcaster";
         private readonly string REGISTRY_KEY_VALUE = @"API_KEY";
         private readonly string REGISTRY_REQUEST_VALUE = @"API_REQUEST";
 
@@ -29,8 +29,8 @@ namespace HelpDeskBroadcaster
 
             var HelpDeskData = KeyFromRegistry();
             if ((HelpDeskData != null) && (!string.IsNullOrEmpty(HelpDeskData.Item1) || !string.IsNullOrEmpty(HelpDeskData.Item2)))
-                 _service.SetCurrentUser(HelpDeskData); 
-               
+                _service.SetCurrentUser(HelpDeskData);
+
 
             UpdateListControl();
             sendBtn.DataContext = Bot;
@@ -49,14 +49,7 @@ namespace HelpDeskBroadcaster
             if (_service == null)
                 return false;
 
-            try
-            {
-                _organizationsList = _service.GetClientsData();
-            }
-            catch (Exception)
-            {
-
-            }
+            _organizationsList = _service.GetClientsData();
             return _organizationsList.Count != 0;
         }
 
@@ -84,11 +77,13 @@ namespace HelpDeskBroadcaster
                 if (key != null)
                     return new Tuple<string, string>(key.GetValue(REGISTRY_KEY_VALUE)?.ToString(), key.GetValue(REGISTRY_REQUEST_VALUE)?.ToString());
             }
-            return new Tuple<string, string>("", "");
+            return null;
         }
 
         private async void ExecutedSendCommand(object sender, ExecutedRoutedEventArgs e)
         {
+            messageTxtBox.Text = System.DateTime.Now.ToString(); // 
+
             BroadcasterBot.eMessengerIDFromFields eFlags = 0;
             if (telegramCheckBox.IsChecked == true)
                 eFlags |= BroadcasterBot.eMessengerIDFromFields.e_ID_Telegram;
@@ -96,9 +91,8 @@ namespace HelpDeskBroadcaster
                 eFlags |= BroadcasterBot.eMessengerIDFromFields.e_ID_Viber;
 
             await _bot.SendAllAsync(_organizationsList, messageTxtBox.Text, eFlags);
+            MessageBox.Show($"{Bot.CountMessages} messages sent");
             Bot.Progress = 0;
-            logBox.Clear();
-            logBox.Text = _bot.LogString;
         }
 
         private void CanExecuteSendCommand(object sender, CanExecuteRoutedEventArgs e)
@@ -112,13 +106,13 @@ namespace HelpDeskBroadcaster
                     break;
                 }
             }
-            e.CanExecute = (Bot == null) ? false : 
+            e.CanExecute = (Bot == null) ? false :
                 (Bot.Progress == 0) && !string.IsNullOrEmpty(messageTxtBox.Text) && (telegramCheckBox.IsChecked == true || viberCheckBox.IsChecked == true) && bHasCheck;
         }
 
         private void keyBtn_Click(object sender, RoutedEventArgs e)
         {
-            var wind = new RequestWindow(KeyFromRegistry());
+            var wind = new RequestWindow();
             if (wind.ShowDialog() == true)
             {
                 var pair = wind.GetValues();

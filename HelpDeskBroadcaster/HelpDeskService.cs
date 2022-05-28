@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Text;
 
 namespace HelpDeskBroadcaster
 {
@@ -12,9 +10,9 @@ namespace HelpDeskBroadcaster
         private string m_sKeyAPI { get; set; }
         private string m_sRequestAPI { get; set; }
 
-        private readonly List<OrganizationWithUsers> _organizationsList = new();
+        private List<OrganizationWithUsers> _organizationsList = new List<OrganizationWithUsers>();
 
-        private int _currentPage;
+        private int _currentPage = 0;
 
         public HelpDeskService()
         {
@@ -30,30 +28,12 @@ namespace HelpDeskBroadcaster
 
         public List<OrganizationWithUsers> GetClientsData()
         {
-            //var pathFile = Directory.GetCurrentDirectory(); // test
-            //pathFile = pathFile.Remove(pathFile.IndexOf("bin"));//
-            //pathFile = pathFile.Insert(pathFile.Length, "users.json");//
-            //var text = File.ReadAllText(pathFile);
-            if (m_sKeyAPI == null || m_sRequestAPI == null)
-            {
-                return _organizationsList;
-            }
-
-            string html = string.Empty;
-            {
-                string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(m_sKeyAPI));
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(m_sRequestAPI);
-                request.Headers.Add("Authorization", "Basic " + svcCredentials);
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    html = reader.ReadToEnd();
-                }
-            }
-
+            var pathFile = Directory.GetCurrentDirectory(); // test
+            pathFile = pathFile.Remove(pathFile.IndexOf("bin"));//
+            pathFile = pathFile.Insert(pathFile.Length, "users.json");//
+            var text = File.ReadAllText(pathFile);
             //GET request
-            var returnFileFromAPI = JsonConvert.DeserializeObject<DataRoot>(html);
+            var returnFileFromAPI = JsonConvert.DeserializeObject<DataRoot>(text);
             if (returnFileFromAPI != null)
             {
                 _currentPage = returnFileFromAPI.pagination.current_page;
@@ -61,17 +41,9 @@ namespace HelpDeskBroadcaster
                 _currentPage++;
                 while (_currentPage <= returnFileFromAPI.pagination.total_pages)
                 {
-                    string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(m_sKeyAPI));
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(m_sRequestAPI + "?page=" + _currentPage);
-                    request.Headers.Add("Authorization", "Basic " + svcCredentials);
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                    using (Stream stream = response.GetResponseStream())
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        html = reader.ReadToEnd();
-                    }
-                    returnFileFromAPI = JsonConvert.DeserializeObject<DataRoot>(html);
-                    ReadPage(returnFileFromAPI);
+                    var nextPage = pathFile.Insert(pathFile.IndexOf('.'), _currentPage.ToString());
+
+                    ReadPage(JsonConvert.DeserializeObject<DataRoot>(File.ReadAllText(nextPage)));
                     _currentPage++;
                 }
             }
@@ -88,24 +60,22 @@ namespace HelpDeskBroadcaster
                 if (user.organization == null)
                     continue;
 
-                if (!_organizationsList.Exists(x => x.m_organizationID == user.organization.id))
-                    _organizationsList.Add(new OrganizationWithUsers() { m_organizationID = user.organization.id, m_organizationName = user.organization.name });
+                if (!_organizationsList.Exists(x => x.OrganizatioId == user.organization.id))
+                    _organizationsList.Add(new OrganizationWithUsers() { OrganizatioId = user.organization.id, OrganizationName = user.organization.name });
 
-                var org = _organizationsList.Find(x => x.m_organizationID == user.organization.id);
+                var org = _organizationsList.Find(x => x.OrganizatioId == user.organization.id);
                 if (org == null)
                     continue;
 
                 foreach (var messenger in user.custom_fields)
                 {
-                    if ((messenger.id == (int)BroadcasterBot.eMessengerIDFromFields.e_ID_Telegram) 
-                        && (messenger.field_value.ToString().Length > 0)
-                        && (org._telegramUsersToken.Find(x => x == messenger.field_value.ToString()) == null))
-                        org._telegramUsersToken.Add(messenger.field_value.ToString());
+                    if ((messenger.id == (int)BroadcasterBot.eMessengerIDFromFields.e_ID_Telegram) &&
+                        (org.TelegramUsersToken.Find(x => x == messenger.field_value.ToString()) == null))
+                        org.TelegramUsersToken.Add(messenger.field_value.ToString());
 
-                    if ((messenger.id == (int)BroadcasterBot.eMessengerIDFromFields.e_ID_Viber)
-                        && (messenger.field_value.ToString().Length > 0)
-                        && (org._viberUsersToken.Find(x => x == messenger.field_value.ToString()) == null))
-                        org._viberUsersToken.Add(messenger.field_value.ToString());
+                    if ((messenger.id == (int)BroadcasterBot.eMessengerIDFromFields.e_ID_Viber) &&
+                         (org.ViberUsersToken.Find(x => x == messenger.field_value.ToString()) == null))
+                        org.ViberUsersToken.Add(messenger.field_value.ToString());
                 }
             }
         }
