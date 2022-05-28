@@ -1,0 +1,34 @@
+﻿<Window x:Class="HelpDeskBroadcaster.RequestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HelpDeskBroadcaster"
+        mc:Ignorable="d"
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+     TextElement.Foreground="{DynamicResource MaterialDesignDarkForeground}"
+     TextElement.FontWeight="Regular"
+     TextElement.FontSize="13"
+     TextOptions.TextFormattingMode="Ideal"
+     TextOptions.TextRenderingMode="Auto"
+     Background= "{DynamicResource MaterialDesignToolBarBackground}"
+     FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Налаштування HelpDesk API" Height="150" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Margin="10, 0, 10, 0" Grid.Column="0" Grid.Row="1" FontStyle="Italic" FontWeight="Bold" Content="Введіть API ключ:"/>
+        <Label Margin="10, 0, 10, 0" Grid.Column="1" Grid.Row="1" FontStyle="Italic" FontWeight="Bold" Content="Введіть адресу запиту:"/>
+        <TextBox Margin="10, 0, 10, 0" Grid.Column="0" Foreground="Black" Name="keyTxt" Grid.Row="2" Background="White"></TextBox>
+        <TextBox Margin="10, 0, 10, 0" Grid.Column="1" Foreground="Black" Name="requestTxt" Grid.Row="2" Background="White"></TextBox>
+        <Button Name="okBtn" Grid.Row="3" Width="150" Grid.ColumnSpan="2" Click="okBtn_Click">OK</Button>
+    </Grid>
+</Window>
