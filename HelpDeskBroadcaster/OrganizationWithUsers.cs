@@ -7,7 +7,6 @@ namespace HelpDeskBroadcaster
 {
     public class OrganizationWithUsers : INotifyPropertyChanged
     {
-        public string OrganizatioId { get; set; }
         public string OrganizationName { get; set; }
 
         public List<string> ViberUsersToken { get; set; } = new();
@@ -25,20 +24,12 @@ namespace HelpDeskBroadcaster
             }
         }
 
-        protected virtual void OnPropertyChanged(string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
+        protected virtual void OnPropertyChanged(string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     public static class OrganizationsHelper
     {
-        public static List<string> GetUniqueTokens(this List<OrganizationWithUsers> list, eMessengerIDFromFields eFlag)
+        public static List<string> GetUniqueTokens(this List<OrganizationWithUsers> list, EMessengerIDFromFields eFlag)
         {
             var ret = new List<string>();
             foreach (var item in list)
@@ -46,8 +37,8 @@ namespace HelpDeskBroadcaster
                 if (!item.Checked)
                     continue;
 
-                var source = ((eFlag & eMessengerIDFromFields.e_ID_Telegram) == eMessengerIDFromFields.e_ID_Telegram) ? item.TelegramUsersToken :
-                             ((eFlag & eMessengerIDFromFields.e_ID_Viber) == eMessengerIDFromFields.e_ID_Viber) ? item.ViberUsersToken : null;
+                var source = ((eFlag & EMessengerIDFromFields.e_ID_Telegram) == EMessengerIDFromFields.e_ID_Telegram) ? item.TelegramUsersToken :
+                             ((eFlag & EMessengerIDFromFields.e_ID_Viber) == EMessengerIDFromFields.e_ID_Viber) ? item.ViberUsersToken : null;
 
                 if (source == null)
                     continue;

@@ -11,9 +11,9 @@ namespace HelpDeskBroadcaster
             InitializeComponent();
         }
 
-        public Tuple<string, string> GetValues() => new Tuple<string, string>(keyTxt.Text, requestTxt.Text);
+        public Tuple<string, string> Values => new(keyTxt.Text, requestTxt.Text);
 
-        private void okBtn_Click(object sender, RoutedEventArgs e)
+        private void OkBtn_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
             this.Close();

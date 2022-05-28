@@ -5,35 +5,19 @@ using System.IO;
 
 namespace HelpDeskBroadcaster
 {
-    public class HelpDeskService
+    public class RootService
     {
-        private string m_sKeyAPI { get; set; }
-        private string m_sRequestAPI { get; set; }
+        private readonly List<OrganizationWithUsers> _organizationsList = new();
 
-        private List<OrganizationWithUsers> _organizationsList = new List<OrganizationWithUsers>();
-
-        private int _currentPage = 0;
-
-        public HelpDeskService()
-        {
-        }
-
-        public bool SetCurrentUser(Tuple<string, string> sval)
-        {
-            m_sKeyAPI = sval.Item1;
-            m_sRequestAPI = sval.Item2;
-            return true;
-            // if not found or bad request return false;
-        }
-
-        public List<OrganizationWithUsers> GetClientsData()
+        private int _currentPage;
+        public List<OrganizationWithUsers> GetUsersFromJSON() // change path to file
         {
             var pathFile = Directory.GetCurrentDirectory(); // test
             pathFile = pathFile.Remove(pathFile.IndexOf("bin"));//
             pathFile = pathFile.Insert(pathFile.Length, "users.json");//
             var text = File.ReadAllText(pathFile);
             //GET request
-            var returnFileFromAPI = JsonConvert.DeserializeObject<DataRoot>(text);
+            var returnFileFromAPI = JsonConvert.DeserializeObject<Root>(text);
             if (returnFileFromAPI != null)
             {
                 _currentPage = returnFileFromAPI.pagination.current_page;
@@ -43,14 +27,14 @@ namespace HelpDeskBroadcaster
                 {
                     var nextPage = pathFile.Insert(pathFile.IndexOf('.'), _currentPage.ToString());
 
-                    ReadPage(JsonConvert.DeserializeObject<DataRoot>(File.ReadAllText(nextPage)));
+                    ReadPage(JsonConvert.DeserializeObject<Root>(File.ReadAllText(nextPage)));
                     _currentPage++;
                 }
             }
             return _organizationsList;
         }
 
-        public void ReadPage(DataRoot page)
+        public void ReadPage(Root page)
         {
             if (page == null)
                 return;
@@ -60,20 +44,20 @@ namespace HelpDeskBroadcaster
                 if (user.organization == null)
                     continue;
 
-                if (!_organizationsList.Exists(x => x.OrganizatioId == user.organization.id))
-                    _organizationsList.Add(new OrganizationWithUsers() { OrganizatioId = user.organization.id, OrganizationName = user.organization.name });
+                if (!_organizationsList.Exists(x => x.OrganizationName == user.organization))
+                    _organizationsList.Add(new OrganizationWithUsers() { OrganizationName = user.organization });
 
-                var org = _organizationsList.Find(x => x.OrganizatioId == user.organization.id);
+                var org = _organizationsList.Find(x => x.OrganizationName == user.organization);
                 if (org == null)
                     continue;
 
                 foreach (var messenger in user.custom_fields)
                 {
-                    if ((messenger.id == (int)BroadcasterBot.eMessengerIDFromFields.e_ID_Telegram) &&
+                    if ((messenger.id == (int)BroadcasterBot.EMessengerIDFromFields.e_ID_Telegram) &&
                         (org.TelegramUsersToken.Find(x => x == messenger.field_value.ToString()) == null))
                         org.TelegramUsersToken.Add(messenger.field_value.ToString());
 
-                    if ((messenger.id == (int)BroadcasterBot.eMessengerIDFromFields.e_ID_Viber) &&
+                    if ((messenger.id == (int)BroadcasterBot.EMessengerIDFromFields.e_ID_Viber) &&
                          (org.ViberUsersToken.Find(x => x == messenger.field_value.ToString()) == null))
                         org.ViberUsersToken.Add(messenger.field_value.ToString());
                 }

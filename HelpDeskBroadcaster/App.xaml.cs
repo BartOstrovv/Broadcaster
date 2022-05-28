@@ -25,7 +25,7 @@ namespace HelpDeskBroadcaster
         {
             colllection.AddSingleton<MainWindow>();
             colllection.AddSingleton<BroadcasterBot>();
-            colllection.AddSingleton<HelpDeskService>();
+            colllection.AddSingleton<RootService>();
             colllection.AddSingleton<List<OrganizationWithUsers>>();
         }
     }

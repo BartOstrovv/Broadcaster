@@ -29,6 +29,6 @@
         <Label Margin="10, 0, 10, 0" Grid.Column="1" Grid.Row="1" FontStyle="Italic" FontWeight="Bold" Content="Введіть адресу запиту:"/>
         <TextBox Margin="10, 0, 10, 0" Grid.Column="0" Foreground="Black" Name="keyTxt" Grid.Row="2" Background="White"></TextBox>
         <TextBox Margin="10, 0, 10, 0" Grid.Column="1" Foreground="Black" Name="requestTxt" Grid.Row="2" Background="White"></TextBox>
-        <Button Name="okBtn" Grid.Row="3" Width="150" Grid.ColumnSpan="2" Click="okBtn_Click">OK</Button>
+        <Button Name="okBtn" Grid.Row="3" Width="150" Grid.ColumnSpan="2" Click="OkBtn_Click">OK</Button>
     </Grid>
 </Window>

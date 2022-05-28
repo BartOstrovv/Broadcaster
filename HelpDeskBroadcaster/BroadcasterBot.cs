@@ -11,7 +11,7 @@ namespace HelpDeskBroadcaster
 {
     public class BroadcasterBot : INotifyPropertyChanged
     {
-        public enum eMessengerIDFromFields
+        public enum EMessengerIDFromFields
         {
             e_ID_Viber = 8,
             e_ID_Telegram = 7
@@ -31,7 +31,7 @@ namespace HelpDeskBroadcaster
                 if (_countOfMessages != value)
                 {
                     _countOfMessages = value;
-                    OnPropertyChanged("CountMessages");
+                    OnPropertyChanged(nameof(CountMessages));
                 }
             }
         }
@@ -43,39 +43,32 @@ namespace HelpDeskBroadcaster
                 if (_progress != value)
                 {
                     _progress = value;
-                    OnPropertyChanged("Progress");
+                    OnPropertyChanged(nameof(Progress));
                 }
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string propertyName = null)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
+        private void OnPropertyChanged(string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public BroadcasterBot()
         {
             m_telegramBot = new TelegramBotClient(ConfigurationManager.AppSettings["TelegramBotToken"].ToString());
             m_viberBot = new ViberBotClient(ConfigurationManager.AppSettings["ViberBotToken"].ToString());
         }
 
-        public async Task SendAllAsync(List<OrganizationWithUsers> organizations, string text, eMessengerIDFromFields eFlags)
+        public async Task SendAllAsync(List<OrganizationWithUsers> organizations, string text, EMessengerIDFromFields eFlags)
         {
-            var viberTokens = organizations.GetUniqueTokens(eMessengerIDFromFields.e_ID_Viber);
-            var telegramTokens = organizations.GetUniqueTokens(eMessengerIDFromFields.e_ID_Telegram);
+            var viberTokens = organizations.GetUniqueTokens(EMessengerIDFromFields.e_ID_Viber);
+            var telegramTokens = organizations.GetUniqueTokens(EMessengerIDFromFields.e_ID_Telegram);
 
             CountMessages = 0;
-            if ((eFlags & eMessengerIDFromFields.e_ID_Telegram) == eMessengerIDFromFields.e_ID_Telegram)
+            if ((eFlags & EMessengerIDFromFields.e_ID_Telegram) == EMessengerIDFromFields.e_ID_Telegram)
                 CountMessages += telegramTokens.Count;
 
-            if ((eFlags & eMessengerIDFromFields.e_ID_Viber) == eMessengerIDFromFields.e_ID_Viber)
+            if ((eFlags & EMessengerIDFromFields.e_ID_Viber) == EMessengerIDFromFields.e_ID_Viber)
                 CountMessages += viberTokens.Count;
 
-            if ((eFlags & eMessengerIDFromFields.e_ID_Telegram) == eMessengerIDFromFields.e_ID_Telegram)
+            if ((eFlags & EMessengerIDFromFields.e_ID_Telegram) == EMessengerIDFromFields.e_ID_Telegram)
             {
                 foreach (var userID in telegramTokens)
                 {
@@ -85,11 +78,11 @@ namespace HelpDeskBroadcaster
                         Thread.Sleep(200);
                         ++Progress;
                     }
-                    catch (Telegram.Bot.Exceptions.ApiRequestException ex) { continue; }
+                    catch (Telegram.Bot.Exceptions.ApiRequestException) { continue; }
                 }
             }
 
-            if ((eFlags & eMessengerIDFromFields.e_ID_Viber) == eMessengerIDFromFields.e_ID_Viber)
+            if ((eFlags & EMessengerIDFromFields.e_ID_Viber) == EMessengerIDFromFields.e_ID_Viber)
             {
                 while (viberTokens.Count > 0)
                 {
@@ -100,7 +93,7 @@ namespace HelpDeskBroadcaster
                         await m_viberBot.SendBroadcastMessageAsync(br);
                         Progress += br.BroadcastList.Count;
                     }
-                    catch (Viber.Bot.ViberRequestApiException ex) { }
+                    catch (ViberRequestApiException) { }
                     finally { viberTokens.RemoveRange(0, count); }
                 }
             }
