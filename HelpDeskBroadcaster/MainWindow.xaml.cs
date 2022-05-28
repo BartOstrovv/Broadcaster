@@ -82,7 +82,7 @@ namespace HelpDeskBroadcaster
 
         private async void ExecutedSendCommand(object sender, ExecutedRoutedEventArgs e)
         {
-            messageTxtBox.Text = System.DateTime.Now.ToString(); // 
+            //messageTxtBox.Text = System.DateTime.Now.ToString(); // 
 
             BroadcasterBot.eMessengerIDFromFields eFlags = 0;
             if (telegramCheckBox.IsChecked == true)

@@ -37,11 +37,11 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding Checked, Mode=TwoWay}" Content="{Binding Path=m_organizationName}" FontSize="12"/>
+                        <CheckBox IsChecked="{Binding Checked, Mode=TwoWay}" Content="{Binding Path=OrganizationName}" FontSize="12"/>
                         <Label FontSize="12" FontWeight="Bold" Padding="5, 3, 0, 0">(</Label>
-                        <Label FontSize="12" FontWeight="Bold" Padding="0, 3, 0, 0"  Foreground="#7D529E" Content="{Binding Path=_viberUsersToken.Count}" HorizontalAlignment="Right"></Label>
+                        <Label FontSize="12" FontWeight="Bold" Padding="0, 3, 0, 0"  Foreground="#7D529E" Content="{Binding Path=ViberUsersToken.Count}" HorizontalAlignment="Right"></Label>
                         <Label FontSize="12" FontWeight="Bold" Padding="0, 3, 5, 0">,</Label>
-                        <Label FontSize="12" FontWeight="Bold" Padding="0, 3, 0, 0"  Foreground="#0C689D" Content="{Binding Path=_telegramUsersToken.Count}" HorizontalAlignment="Right"></Label>
+                        <Label FontSize="12" FontWeight="Bold" Padding="0, 3, 0, 0"  Foreground="#0C689D" Content="{Binding Path=TelegramUsersToken.Count}" HorizontalAlignment="Right"></Label>
                         <Label FontSize="12" FontWeight="Bold" Padding="0, 3, 0, 0">)</Label>
                     </StackPanel>
                 </DataTemplate>

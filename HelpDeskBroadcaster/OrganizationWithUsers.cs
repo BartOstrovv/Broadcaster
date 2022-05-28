@@ -10,8 +10,8 @@ namespace HelpDeskBroadcaster
         public string OrganizatioId { get; set; }
         public string OrganizationName { get; set; }
 
-        public List<string> ViberUsersToken { get; set; } = new List<string>();
-        public List<string> TelegramUsersToken { get; set; } = new List<string>();
+        public List<string> ViberUsersToken { get; set; } = new();
+        public List<string> TelegramUsersToken { get; set; } = new();
 
         public event PropertyChangedEventHandler PropertyChanged;
         private bool m_bIsChecked;
