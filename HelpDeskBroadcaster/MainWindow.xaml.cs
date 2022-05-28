@@ -8,9 +8,9 @@ namespace HelpDeskBroadcaster
 {
     public partial class MainWindow : Window
     {
-        private readonly string REGISTRY_BRANCH = @"SOFTWARE\HelpDeskBroadcaster";
-        private readonly string REGISTRY_KEY_VALUE = @"API_KEY";
-        private readonly string REGISTRY_REQUEST_VALUE = @"API_REQUEST";
+        //private readonly string REGISTRY_BRANCH = @"SOFTWARE\Broadcaster";
+        //private readonly string REGISTRY_KEY_VALUE = @"API_KEY";
+        //private readonly string REGISTRY_REQUEST_VALUE = @"API_REQUEST";
 
         private readonly RootService _service;
 
@@ -49,7 +49,7 @@ namespace HelpDeskBroadcaster
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e) => UpdateListControl();
 
-        private void KeyToRegistry(Tuple<string, string> sVal)
+        /*private void KeyToRegistry(Tuple<string, string> sVal)
         {
             using RegistryKey key = Registry.CurrentUser.CreateSubKey(REGISTRY_BRANCH);
             if (key != null)
@@ -57,9 +57,9 @@ namespace HelpDeskBroadcaster
                 key.SetValue(REGISTRY_KEY_VALUE, sVal.Item1);
                 key.SetValue(REGISTRY_REQUEST_VALUE, sVal.Item2);
             }
-        }
+        }*/
 
-        private Tuple<string, string> KeyFromRegistry()
+        /*private Tuple<string, string> KeyFromRegistry()
         {
             using (var key = Registry.CurrentUser.OpenSubKey(REGISTRY_BRANCH))
             {
@@ -67,7 +67,7 @@ namespace HelpDeskBroadcaster
                     return new Tuple<string, string>(key.GetValue(REGISTRY_KEY_VALUE)?.ToString(), key.GetValue(REGISTRY_REQUEST_VALUE)?.ToString());
             }
             return null;
-        }
+        }*/
 
         private async void ExecutedSendCommand(object sender, ExecutedRoutedEventArgs e)
         {
