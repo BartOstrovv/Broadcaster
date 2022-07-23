@@ -13,12 +13,12 @@
         {
           "id": 7,
           "field_type": "text",
-          "field_value": "599357488"
+          "field_value": "" //viber Token
         },
         {
           "id": 8,
           "field_type": "text",
-          "field_value": "u+XEv2lfSH+o+Bh6j3Gtmg=="
+          "field_value": "" //tg Token
         },
         {
           "id": 2,
