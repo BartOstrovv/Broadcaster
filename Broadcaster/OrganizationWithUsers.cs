@@ -45,7 +45,7 @@ namespace HelpDeskBroadcaster
 
                 foreach (string token in source)
                 {
-                    if (ret.Find(x => x == token) == null)
+                    if ((ret.Find(x => x == token) == null) && !string.IsNullOrEmpty(token))
                         ret.Add(token);
                 }
             }

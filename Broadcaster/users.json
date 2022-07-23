@@ -7,18 +7,18 @@
       "name": "380503772773",
       "organization": "Your Group",
       "lastname": "",
-      "email": "380503772773@auto.nextel",
+      "email": "some@gmail.com",
       "phone": "380503772773",
       "custom_fields": [
         {
           "id": 7,
-          "field_type": "text",
-          "field_value": "" //viber Token
+          "field_type": "tg Token",
+          "field_value": "" 
         },
         {
           "id": 8,
-          "field_type": "text",
-          "field_value": "" //tg Token
+          "field_type": "viber Token",
+          "field_value": ""
         },
         {
           "id": 2,

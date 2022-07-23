@@ -72,6 +72,8 @@ namespace HelpDeskBroadcaster
             {
                 foreach (var userID in telegramTokens)
                 {
+                    if (string.IsNullOrEmpty(userID))
+                        continue;
                     try
                     {
                         await m_telegramBot.SendTextMessageAsync(userID, text);
