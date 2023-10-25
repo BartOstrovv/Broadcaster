@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Viber.Bot;
 
-namespace HelpDeskBroadcaster
+namespace Broadcaster
 {
     public class BroadcasterBot : INotifyPropertyChanged
     {

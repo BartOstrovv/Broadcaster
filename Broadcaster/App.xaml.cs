@@ -3,7 +3,7 @@ using System.Windows;
 using System.Collections.Generic;
 
 
-namespace HelpDeskBroadcaster
+namespace Broadcaster
 {
     public partial class App : Application
     {

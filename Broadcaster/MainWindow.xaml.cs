@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 
-namespace HelpDeskBroadcaster
+namespace Broadcaster
 {
     public partial class MainWindow : Window
     {

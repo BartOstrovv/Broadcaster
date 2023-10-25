@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using static HelpDeskBroadcaster.BroadcasterBot;
+using static Broadcaster.BroadcasterBot;
 
-namespace HelpDeskBroadcaster
+namespace Broadcaster
 {
     public class OrganizationWithUsers : INotifyPropertyChanged
     {
